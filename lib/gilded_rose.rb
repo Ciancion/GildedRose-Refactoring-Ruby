@@ -4,7 +4,9 @@ class GildedRose
   end
 
   def update_quality
-    @items.each { |item| update_item(item) }
+    @items.each do |item|
+      update_item(item) unless item.name == 'Sulfuras, Hand of Ragnaros'
+    end
   end
 
   private
@@ -12,7 +14,7 @@ class GildedRose
   def update_item(item)
     if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
 
-      if item.quality > 0 && item.name != 'Sulfuras, Hand of Ragnaros'
+      if item.quality > 0
         reduce_quality(item)
       end
 
@@ -32,11 +34,11 @@ class GildedRose
 
     end
 
-    item.sell_in = item.sell_in - 1 if item.name != 'Sulfuras, Hand of Ragnaros'
+    item.sell_in = item.sell_in - 1
 
     if item.sell_in < 0
       if item.name != 'Aged Brie'
-        if item.name != 'Backstage passes to a TAFKAL80ETC concert' && item.quality > 0 && item.name != 'Sulfuras, Hand of Ragnaros'
+        if item.name != 'Backstage passes to a TAFKAL80ETC concert' && item.quality > 0
             reduce_quality(item)
         else
           item.quality = 0
