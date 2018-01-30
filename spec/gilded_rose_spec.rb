@@ -12,7 +12,7 @@ describe GildedRose do
     end
   end
 
-  it'does degrade the quality twice when Sell by date is passed' do
+  it'does degrade the quality when Sell_by date is passed' do
     items = [Item.new('foo', 1, 5)]
     GildedRose.new(items).update_quality
 
@@ -75,6 +75,4 @@ describe GildedRose do
 
     expect(items[0].quality).to be(50)
   end
-
-
 end
