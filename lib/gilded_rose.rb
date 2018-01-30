@@ -14,7 +14,7 @@ class GildedRose
   private
 
   def update_item(item)
-    if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
+    if normal_item?(item)
       reduce_quality(item)
     else
       increase_quality(item)
@@ -27,18 +27,19 @@ class GildedRose
     item.sell_in = item.sell_in - 1
 
     if item.sell_in < 0
-      if item.name != 'Aged Brie'
-        if item.name != 'Backstage passes to a TAFKAL80ETC concert'
-          reduce_quality(item)
-        else
-          item.quality = 0
-        end
+      if normal_item?(item)
+        reduce_quality(item)
       else
-        increase_quality(item)
+        if item.name == 'Backstage passes to a TAFKAL80ETC concert'
+          item.quality = 0
+        else
+          increase_quality(item)
+        end
       end
     end
   end
 
+  #move final logic in here
   def set_item_quality(item)
     if item.name == 'Aged Brie'
       increase_quality(item)
@@ -57,7 +58,8 @@ class GildedRose
     item.quality += 1
   end
 
-  def set_quality_bp(item)
-    increase_quality(item)
+
+  def normal_item?(item)
+    item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
   end
 end
