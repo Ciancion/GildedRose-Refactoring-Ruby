@@ -12,7 +12,7 @@ describe GildedRose do
   end
 
   it'does degrade the quality when Sell_by date is passed' do
-    items =[ Normal.new('foo', 1, 5)]
+    items = [Normal.new('foo', 1, 5)]
     GildedRose.new(items).update_quality
 
     expect(items[0].quality).to eq(4)
