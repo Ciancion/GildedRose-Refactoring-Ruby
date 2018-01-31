@@ -1,4 +1,3 @@
-
 class GildedRose
   def initialize(items)
     @items = items
@@ -7,75 +6,76 @@ class GildedRose
   def update_quality
     @items.each do |item|
       if item.name != 'Sulfuras, Hand of Ragnaros' && item.quality > 0 && item.quality < 50
-        set_item_quality(item)
+        item.sell_in -= 1
+        item.update_quality_items
       end
     end
   end
-
-  private
-
-  def set_item_quality(item)
-    setup_item_quality(item)
-    update_sell_in(item)
-  end
-
-### Set-up items quality
-  def setup_item_quality(item)
-    if normal_item?(item)
-      reduce_quality(item)
-    else
-      increase_quality(item)
-      setup_quality_backstage_passes(item)
-    end
-  end
-
-### Set-up Backstage passes quality and sell_in
-  def setup_quality_backstage_passes(item)
-    if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-      setup_backstage_passes_sell_in(item)
-    end
-  end
-
-  def setup_backstage_passes_sell_in(item)
-    if item.sell_in < 11
-      increase_quality(item)
-      set_backstage_passes_lower_5_days(item)
-    end
-  end
-
-  def set_backstage_passes_lower_5_days(item)
-    increase_quality(item) if item.sell_in < 6
-  end
-
-  def set_quality_expired_backstage_passes(item)
-    item.quality = 0 if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-  end
-
-### Update Sell_in -- at the end of each day the system lowers both values for every item
-  def update_sell_in(item)
-    item.sell_in -= 1
-    if expired?(item)
-      setup_item_quality(item)
-      set_quality_expired_backstage_passes(item)
-    end
-  end
-
-### Quality proprieties
-  def reduce_quality(item)
-    item.quality -= 1
-  end
-
-  def increase_quality(item)
-    item.quality += 1
-  end
-
-### Sell_in Propriety
-  def expired?(item)
-    item.sell_in < 0
-  end
-
-### Item Propriety
-  def normal_item?(item)
-    item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
-  end
 end
+
+
+  class Item
+    attr_accessor :name, :sell_in, :quality
+
+    def initialize(name, sell_in, quality)
+      @name = name
+      @sell_in = sell_in
+      @quality = quality
+    end
+
+    def to_s()
+      "#{@name}, #{@sell_in}, #{@quality}"
+    end
+  end
+
+
+  class Normal < Item
+
+    def update_quality_items
+    @quality -= 1
+    end
+  end
+
+  class AgedBrie < Item
+
+    def update_quality_items
+      @quality += 1
+    end
+
+  end
+
+  class Backstage < Item
+    def update_quality_items
+      if expired?
+        @quality = 0
+      else
+        @quality += 1
+        setup_backstage_passes_sell_in
+      end
+    end
+
+    private
+
+    def setup_backstage_passes_sell_in
+      if @sell_in < 11
+        @quality += 1
+        set_backstage_passes_lower_5_days
+      end
+    end
+
+    def set_backstage_passes_lower_5_days
+       if @sell_in < 6
+         @quality += 1
+       end
+    end
+
+    def expired?
+      @sell_in < 0
+    end
+  end
+
+
+
+
+
+  
