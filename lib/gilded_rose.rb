@@ -4,12 +4,7 @@ class GildedRose
   end
 
   def update_quality
-    @items.each do |item|
-      if item.name != 'Sulfuras, Hand of Ragnaros' && item.quality > 0 && item.quality < 50
-        item.sell_in -= 1
-        item.update_quality_items
-      end
-    end
+    @items.each(&:update_quality_items)
   end
 end
 
@@ -29,23 +24,41 @@ end
 
 class Normal < Item
   def update_quality_items
-    @quality -= 1
+    if @quality > 0 && @quality < 50
+      @sell_in -= 1
+      @quality -= 1
+    end
+  end
+end
+
+class Sulfuras < Item
+  def update_quality_items
+    if @quality > 0 && @quality < 50
+      @sell_in -= 1
+      @quality
+    end
   end
 end
 
 class AgedBrie < Item
   def update_quality_items
-    @quality += 1
+    if @quality > 0 && @quality < 50
+      @sell_in -= 1
+      @quality += 1
+    end
   end
 end
 
 class Backstage < Item
   def update_quality_items
-    if expired?
-      @quality = 0
-    else
-      @quality += 1
-      setup_backstage_passes_sell_in
+    if @quality > 0 && @quality < 50
+      @sell_in -= 1
+      if expired?
+        @quality = 0
+      else
+        @quality += 1
+        setup_backstage_passes_sell_in
+      end
     end
   end
 

@@ -4,7 +4,7 @@ require 'gilded_rose'
 describe GildedRose do
   context '#update_quality' do
     it 'does not change the name' do
-      items = [Item.new('foo', 0, 0)]
+      items = [Normal.new('foo', 0, 0)]
       GildedRose.new(items).update_quality
 
       expect(items[0].name).to eq 'foo'
@@ -29,7 +29,7 @@ describe GildedRose do
 
   context '#Sulfuras, Hand of Ragnaros' do
     it 'does not decrese the quality of Sulfuras' do
-      items = [Item.new('Sulfuras, Hand of Ragnaros', 1, 5)]
+      items = [Sulfuras.new('Sulfuras, Hand of Ragnaros', 1, 5)]
       GildedRose.new(items).update_quality
 
       expect(items[0].quality).to eq(5)
